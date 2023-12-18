@@ -16,7 +16,7 @@ import {
   // twitterWallet,
 } from '@zerodev/wagmi/rainbowkit'
 
-export const projectId = 'b5486fa4-e3d9-450b-8428-646e757c10f6'
+export const projectId = '81ab1b9a-cf7f-4bd0-8448-7a0c52a8376e'
 
 export const { chains, publicClient, webSocketPublicClient } = configureChains(
   [polygonMumbai],
@@ -27,7 +27,7 @@ const connectors = connectorsForWallets([
   {
     groupName: 'Social',
       wallets: [
-        googleWallet({chains, options: { projectId}}),
+        googleWallet({chains, options: { projectId, }}),
         // facebookWallet({chains, options: { projectId}}),
         // githubWallet({chains, options: { projectId }}),
         // discordWallet({chains, options: { projectId }}),

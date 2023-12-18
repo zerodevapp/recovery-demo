@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAccount } from "wagmi";
 import { ZeroDevWeb3Auth } from '@zerodev/web3auth';
+import usePopUp from "../popUp/usePopUp";
 
 type User = {
   email: string;
@@ -8,8 +9,9 @@ type User = {
 }
 
 export default function Settings() {
-  const { isConnected } = useAccount();
+  const { isConnected, address } = useAccount();
   const [user, setUser] = useState<User | undefined>();
+  const { openChildWindow } = usePopUp();
 
   useEffect(() => {
     if (isConnected) {
@@ -46,6 +48,12 @@ export default function Settings() {
                 <div className="text-gray-900">{user?.email}</div>
               </dd>
             </div>
+            <div className="pt-6 sm:flex">
+              <dt className="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">Smart Account address</dt>
+              <dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
+                <div className="text-gray-900">{address}</div>
+              </dd>
+            </div>
           </dl>
         </div>
 
@@ -56,7 +64,11 @@ export default function Settings() {
           <ul className="mt-6 divide-y divide-gray-100 border-t border-gray-200 text-sm leading-6">
             <li className="flex justify-between gap-x-6 py-6">
               <div className="font-medium text-gray-900">Recovery Options</div>
-              <button type="button" className="font-semibold text-indigo-600 hover:text-indigo-500">
+              <button
+                type="button"
+                className="font-semibold text-indigo-600 hover:text-indigo-500"
+                onClick={() => openChildWindow(address)}
+              >
                 Update
               </button>
             </li>
