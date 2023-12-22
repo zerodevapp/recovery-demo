@@ -1,10 +1,11 @@
-import { useRef, useEffect, useCallback } from "react";
+import { useRef, useEffect, useCallback, useState } from "react";
 import { RecoveryConfig, RecoveryPopupMessage, validateUserOperationCallData } from "./helpers/types";
 
 const useKernelAccountRecovery = ({ address, onUserOperation }: RecoveryConfig) => {
   // TODO remove dashboard Origin
   const dashboardOrigin = process.env.REACT_APP_DASHBOARD_URL;
   const childWindowRef = useRef<Window | null>(null);
+  const [error, setError] = useState<string | undefined>(undefined);
 
   const openRecoveryPopup = useCallback(() => {
     if (address === undefined) {
@@ -26,12 +27,16 @@ const useKernelAccountRecovery = ({ address, onUserOperation }: RecoveryConfig) 
         // Ignore messages from other origins
         return;
       }
+      if (error) {
+        setError(undefined);
+      }
 
       const { userOp } = event.data;
       const parseUserOpCallData = validateUserOperationCallData(userOp);
 
       if (!parseUserOpCallData.success) {
-        throw new Error(parseUserOpCallData.error.toString());
+        setError('Invalid user operation call data');
+        return;
       }
 
       childWindowRef.current?.postMessage({
@@ -58,6 +63,7 @@ const useKernelAccountRecovery = ({ address, onUserOperation }: RecoveryConfig) 
 
   return { 
     openRecoveryPopup,
+    error
   };
 };
 

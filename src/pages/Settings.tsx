@@ -13,7 +13,7 @@ export default function Settings() {
   const { isConnected, address } = useAccount();
   const ecdsaProvider = useEcdsaProvider();
   const [user, setUser] = useState<User | undefined>();
-  const { openRecoveryPopup } = useKernelAccountRecovery({
+  const { openRecoveryPopup, error } = useKernelAccountRecovery({
     address,
     onUserOperation: async (userOp) => {
       console.log('ecdsaProvider', ecdsaProvider);
@@ -23,7 +23,7 @@ export default function Settings() {
       // return txhash;
     }
   });
-
+  console.log('error', error);
   useEffect(() => {
     if (isConnected) {
       const getUserDetails = async () => {
