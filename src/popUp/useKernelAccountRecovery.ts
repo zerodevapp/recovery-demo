@@ -1,18 +1,5 @@
 import { useRef, useEffect, useCallback } from "react";
-
-export interface UserOperationCallData {
-  /* the target of the call */
-  target: `0x${string}`;
-  /* the data passed to the target */
-  data: `0x${string}`;
-  /* the amount of native token to send to the target (default: 0) */
-  value?: bigint;
-}
-
-type RecoveryConfig = {
-  address?: `0x${string}`;
-  onUserOperation: (userOpCallData: UserOperationCallData) => Promise<void>;
-}
+import { RecoveryConfig, RecoveryPopupMessage, validateUserOperationCallData } from "./helpers/types";
 
 const useKernelAccountRecovery = ({ address, onUserOperation }: RecoveryConfig) => {
   // TODO remove dashboard Origin
@@ -41,13 +28,25 @@ const useKernelAccountRecovery = ({ address, onUserOperation }: RecoveryConfig) 
       }
 
       const { userOp } = event.data;
-      childWindowRef.current?.postMessage({ type: 'tx-submitted', status: 'processing' }, dashboardOrigin);
+      const parseUserOpCallData = validateUserOperationCallData(userOp);
 
-      if (onUserOperation) {
-        await onUserOperation(userOp);
+      if (!parseUserOpCallData.success) {
+        throw new Error(parseUserOpCallData.error.toString());
       }
 
-      childWindowRef.current?.postMessage({ type: 'tx-submitted', status: 'done' }, dashboardOrigin);
+      childWindowRef.current?.postMessage({
+        type: 'tx-submitted',
+        status: 'processing'
+      } as RecoveryPopupMessage, dashboardOrigin);
+
+      if (onUserOperation) {
+        await onUserOperation(parseUserOpCallData.data);
+      }
+
+      childWindowRef.current?.postMessage({
+        type: 'tx-submitted',
+        status: 'done'
+      } as RecoveryPopupMessage, dashboardOrigin);
     };
 
     window.addEventListener('message', handleMessage);
