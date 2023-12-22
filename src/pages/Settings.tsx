@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { useAccount } from "wagmi";
 import { ZeroDevWeb3Auth } from '@zerodev/web3auth';
-import usePopUp from "../popUp/usePopUp";
+import { useEcdsaProvider } from "@zerodev/wagmi";
+import useKernelAccountRecovery from "../popUp/useKernelAccountRecovery";
 
 type User = {
   email: string;
@@ -10,8 +11,18 @@ type User = {
 
 export default function Settings() {
   const { isConnected, address } = useAccount();
+  const ecdsaProvider = useEcdsaProvider();
   const [user, setUser] = useState<User | undefined>();
-  const { openChildWindow } = usePopUp();
+  const { openRecoveryPopup } = useKernelAccountRecovery({
+    address,
+    onUserOperation: async (userOp) => {
+      console.log('ecdsaProvider', ecdsaProvider);
+      if (!ecdsaProvider) return;
+      const { hash } = await ecdsaProvider.sendUserOperation(userOp);
+      const txhash = await ecdsaProvider.waitForUserOperationTransaction(hash as `0x${string}`);
+      // return txhash;
+    }
+  });
 
   useEffect(() => {
     if (isConnected) {
@@ -67,7 +78,7 @@ export default function Settings() {
               <button
                 type="button"
                 className="font-semibold text-indigo-600 hover:text-indigo-500"
-                onClick={() => openChildWindow(address)}
+                onClick={() => openRecoveryPopup()}
               >
                 Update
               </button>
