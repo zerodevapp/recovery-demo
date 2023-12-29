@@ -13,7 +13,7 @@ const useKernelAccountRecovery = ({ address, onUserOperation }: RecoveryConfig) 
     }
     const parentUrl = encodeURIComponent(window.location.origin);
     const dashboardUrl = `${dashboardOrigin}/recovery-setup/${address}?parentUrl=${parentUrl}`;
-    const windowFeatures = 'width=800,height=600,resizable,scrollbars=yes,status=1';
+    const windowFeatures = 'width=450,height=600,resizable,scrollbars=yes,status=1';
     childWindowRef.current = window.open(dashboardUrl, '_blank', windowFeatures);
 
     if (childWindowRef.current) {
