@@ -1,31 +1,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import Settings from './pages/Settings';
+import { MantineProvider } from '@mantine/core';
 import ZeroDevWrapper from './ZeroDevWrapper';
 import Home from './pages/Home';
 import SignIn from './pages/SignIn';
 import './index.css';
 import '@rainbow-me/rainbowkit/styles.css'
-import App from './App';
 import reportWebVitals from './reportWebVitals';
+import '@mantine/core/styles.css';
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <App />,
-    children: [
-      {
-        path: '/',
-        element: <Home />,
-        id: 'home',
-      },
-      {
-        path: '/settings',
-        element: <Settings />,
-        id: 'settings',
-      },
-    ],
+    element: <Home />,
+    id: 'home',
   },
   {
     path: '/signin',
@@ -40,7 +29,11 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <ZeroDevWrapper>
-      <RouterProvider router={router} />
+      <MantineProvider>
+        <div className="h-screen w-screen">
+          <RouterProvider router={router} />
+        </div>
+      </MantineProvider>
     </ZeroDevWrapper>
   </React.StrictMode>
 );
