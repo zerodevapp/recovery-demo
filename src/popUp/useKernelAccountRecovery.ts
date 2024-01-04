@@ -1,11 +1,29 @@
-import { useRef, useEffect, useCallback, useState } from "react";
+import { useRef, useEffect, useCallback, useState, useMemo } from "react";
 import { RecoveryConfig, RecoveryPopupMessage, validateUserOperationCallData } from "./helpers/types";
+import useSWR from 'swr';
 
-const useKernelAccountRecovery = ({ address, onUserOperation }: RecoveryConfig) => {
+// @ts-ignore
+const fetcher = (...args) => fetch(...args).then(res => res.json());
+
+const useKernelAccountRecovery = ({ address, onSetupGuardianRequest }: RecoveryConfig) => {
   // TODO remove dashboard Origin
   const dashboardOrigin = process.env.REACT_APP_DASHBOARD_URL;
   const childWindowRef = useRef<Window | null>(null);
   const [error, setError] = useState<string | undefined>(undefined);
+
+  const { data } = useSWR(
+    () => address ? `https://kernel-api.zerodev.app/accounts/${address}/guardians` : null, 
+    fetcher,
+  );
+
+  const guardians = useMemo(() => {
+    if (!data) {
+      return [];
+    }
+
+    return data.map((guardian: any) => guardian.guardian);
+  }, [data]);
+
 
   const openRecoveryPopup = useCallback(() => {
     if (address === undefined) {
@@ -44,8 +62,8 @@ const useKernelAccountRecovery = ({ address, onUserOperation }: RecoveryConfig) 
         status: 'processing'
       } as RecoveryPopupMessage, dashboardOrigin);
 
-      if (onUserOperation) {
-        await onUserOperation(parseUserOpCallData.data);
+      if (onSetupGuardianRequest) {
+        await onSetupGuardianRequest(parseUserOpCallData.data);
       }
 
       childWindowRef.current?.postMessage({
@@ -59,11 +77,13 @@ const useKernelAccountRecovery = ({ address, onUserOperation }: RecoveryConfig) 
     return () => {
       window.removeEventListener('message', handleMessage);
     };
-  }, [onUserOperation]);
+  }, [onSetupGuardianRequest]);
 
   return { 
     openRecoveryPopup,
-    error
+    error,
+    recoveryEnabled: guardians.length > 0,
+    guardians,
   };
 };
 

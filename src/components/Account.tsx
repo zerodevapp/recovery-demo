@@ -2,11 +2,12 @@ import { useAccount } from "wagmi"
 import { Button } from '@mantine/core';
 import { useKernelAccountRecovery } from "@zerodev/recovery";
 import { useEcdsaProvider } from "@zerodev/wagmi";
+// import useKernelAccountRecovery from "../popUp/useKernelAccountRecovery";
 
 export default function Account() {
   const { address } = useAccount();
   const ecdsaProvider = useEcdsaProvider();
-  const { openRecoveryPopup } = useKernelAccountRecovery({
+  const { openRecoveryPopup, recoveryEnabled, guardians } = useKernelAccountRecovery({
     address,
     onSetupGuardianRequest: async (userOpCallData) => {
       if (!ecdsaProvider) {
@@ -41,7 +42,7 @@ export default function Account() {
         <div className="pt-6 sm:flex">
           <dt className="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">Guardian</dt>
           <dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
-            <div className="text-gray-900">todo</div>
+            <div className="text-gray-900">{guardians.length > 0 ? guardians.join(', ') : 'No guardians'}</div>
           </dd>
         </div>
       </dl>
@@ -50,7 +51,7 @@ export default function Account() {
             size="compact-md"
             onClick={openRecoveryPopup}
         >
-            Set Guardian
+            {recoveryEnabled ? "Update Guardian" : "Set Guardian"}
         </Button>
       </div>
     </div>

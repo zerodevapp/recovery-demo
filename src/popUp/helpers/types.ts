@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export type RecoveryConfig = {
   address?: `0x${string}`;
-  onUserOperation: (userOpCallData: UserOperationCallData) => Promise<void>;
+  onSetupGuardianRequest: (userOpCallData: UserOperationCallData) => Promise<void>;
 }
 
 export type RecoveryPopupMessage = {

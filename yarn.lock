@@ -4545,11 +4545,12 @@
   resolved "https://registry.yarnpkg.com/@xtuc/long/-/long-4.2.2.tgz#d291c6a4e97989b5c61d9acf396ae4fe133a718d"
   integrity sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==
 
-"@zerodev/recovery@^0.0.1-beta.2":
-  version "0.0.1-beta.2"
-  resolved "https://registry.yarnpkg.com/@zerodev/recovery/-/recovery-0.0.1-beta.2.tgz#8b854fad8c789d3ca4748d6bb6529e80190e666e"
-  integrity sha512-Tbh6AgrP/aiHbHzhcj8DcvyP5Hk/BA0ov7QLPU9zseUnVr94f/Q8wbjYl58mEMZSpJkxX7I2Q9+rOtKlQV4Jyg==
+"@zerodev/recovery@^0.0.1-beta.3":
+  version "0.0.1-beta.3"
+  resolved "https://registry.yarnpkg.com/@zerodev/recovery/-/recovery-0.0.1-beta.3.tgz#6270e79c8c6d7bd7637f02a991a895df0e6be569"
+  integrity sha512-lfmyfDl1WCS1RSkG7KVvMGv8SoVVPEECdgLIh7eA/5W+WAcLNROl6o9qsvhzK45FD8Bt912B+cx+h0+l0gGDXQ==
   dependencies:
+    swr "^2.2.4"
     zod "^3.22.4"
 
 "@zerodev/sdk@4.4.0":
@@ -12595,6 +12596,14 @@ svgo@^2.7.0:
     csso "^4.2.0"
     picocolors "^1.0.0"
     stable "^0.1.8"
+
+swr@^2.2.4:
+  version "2.2.4"
+  resolved "https://registry.yarnpkg.com/swr/-/swr-2.2.4.tgz#03ec4c56019902fbdc904d78544bd7a9a6fa3f07"
+  integrity sha512-njiZ/4RiIhoOlAaLYDqwz5qH/KZXVilRLvomrx83HjzCWTfa+InyfAjv05PSFxnmLzZkNO9ZfvgoqzAaEI4sGQ==
+  dependencies:
+    client-only "^0.0.1"
+    use-sync-external-store "^1.2.0"
 
 symbol-tree@^3.2.4:
   version "3.2.4"
