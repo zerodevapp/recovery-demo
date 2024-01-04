@@ -4485,6 +4485,13 @@
   resolved "https://registry.yarnpkg.com/@xtuc/long/-/long-4.2.2.tgz#d291c6a4e97989b5c61d9acf396ae4fe133a718d"
   integrity sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==
 
+"@zerodev/recovery@^0.0.1-beta.2":
+  version "0.0.1-beta.2"
+  resolved "https://registry.yarnpkg.com/@zerodev/recovery/-/recovery-0.0.1-beta.2.tgz#8b854fad8c789d3ca4748d6bb6529e80190e666e"
+  integrity sha512-Tbh6AgrP/aiHbHzhcj8DcvyP5Hk/BA0ov7QLPU9zseUnVr94f/Q8wbjYl58mEMZSpJkxX7I2Q9+rOtKlQV4Jyg==
+  dependencies:
+    zod "^3.22.4"
+
 "@zerodev/sdk@4.4.0":
   version "4.4.0"
   resolved "https://registry.yarnpkg.com/@zerodev/sdk/-/sdk-4.4.0.tgz#290800c1684dc48fe2c45f91ade1828e5d018f1f"

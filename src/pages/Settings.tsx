@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { useAccount } from "wagmi";
 import { ZeroDevWeb3Auth } from '@zerodev/web3auth';
 import { useEcdsaProvider } from "@zerodev/wagmi";
-import useKernelAccountRecovery from "../popUp/useKernelAccountRecovery";
+// import useKernelAccountRecovery from "../popUp/useKernelAccountRecovery";
+import { useKernelAccountRecovery } from '@zerodev/recovery';
 
 type User = {
   email: string;
@@ -15,10 +16,10 @@ export default function Settings() {
   const [user, setUser] = useState<User | undefined>();
   const { openRecoveryPopup, error } = useKernelAccountRecovery({
     address,
-    onUserOperation: async (userOp) => {
+    onSetupGuardianRequest: async (userOpCallData) => {
       console.log('ecdsaProvider', ecdsaProvider);
       if (!ecdsaProvider) return;
-      const { hash } = await ecdsaProvider.sendUserOperation(userOp);
+      const { hash } = await ecdsaProvider.sendUserOperation(userOpCallData);
       const txhash = await ecdsaProvider.waitForUserOperationTransaction(hash as `0x${string}`);
       // return txhash;
     }
