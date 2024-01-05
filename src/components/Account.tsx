@@ -1,12 +1,17 @@
 import { useAccount } from "wagmi"
 import { Button } from '@mantine/core';
 import { useKernelAccountRecovery } from "@zerodev/recovery";
+import { useWallets } from "@privy-io/react-auth";
 import { useEcdsaProvider } from "@zerodev/wagmi";
+import { usePrivy } from "@privy-io/react-auth";
 // import useKernelAccountRecovery from "../popUp/useKernelAccountRecovery";
 
 export default function Account() {
   const { address } = useAccount();
   const ecdsaProvider = useEcdsaProvider();
+  const {wallets: eoaWallets} = useWallets();
+  const { logout } = usePrivy();
+
   const { openRecoveryPopup, recoveryEnabled, guardians } = useKernelAccountRecovery({
     address,
     onSetupGuardianRequest: async (userOpCallData) => {
@@ -36,7 +41,7 @@ export default function Account() {
         <div className="pt-6 sm:flex">
           <dt className="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">Signer Address</dt>
           <dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
-            <div className="text-gray-900">todo</div>
+            <div className="text-gray-900">{eoaWallets[0]?.address}</div>
           </dd>
         </div>
         <div className="pt-6 sm:flex">
@@ -52,6 +57,15 @@ export default function Account() {
             onClick={openRecoveryPopup}
         >
             {recoveryEnabled ? "Update Guardian" : "Set Guardian"}
+        </Button>
+      </div>
+      <div className="">
+        <Button
+            size="compact-md"
+            onClick={logout}
+            variant="light"
+        >
+            Disconnect
         </Button>
       </div>
     </div>

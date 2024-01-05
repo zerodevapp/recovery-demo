@@ -1,12 +1,12 @@
 import NftMint from "../components/NftMint"
 import Account from "../components/Account"
-import { useAccount } from "wagmi"
 import { Navigate } from "react-router-dom"
+import { usePrivy } from "@privy-io/react-auth"
 
 export default function Home() {
-  const { isConnected } = useAccount();
+  const { ready, authenticated } = usePrivy();
 
-  if (!isConnected) {
+  if (ready && !authenticated) {
     return <Navigate to="/signin" />;
   }
   return (
