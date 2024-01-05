@@ -6,7 +6,6 @@ import ZeroDevWrapper from './ZeroDevWrapper';
 import Home from './pages/Home';
 import SignIn from './pages/SignIn';
 import './index.css';
-import '@rainbow-me/rainbowkit/styles.css'
 import reportWebVitals from './reportWebVitals';
 import '@mantine/core/styles.css';
 

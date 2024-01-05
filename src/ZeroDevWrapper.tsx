@@ -1,56 +1,40 @@
 import React from "react";
-import {
-  WagmiConfig,
-  configureChains,
-  createConfig,
-} from "wagmi";
+import { configureChains } from "wagmi";
 import { infuraProvider } from 'wagmi/providers/infura'
 import { polygonMumbai } from 'wagmi/chains'
-import { connectorsForWallets, RainbowKitProvider, darkTheme } from '@rainbow-me/rainbowkit'
-import { 
-  googleWallet,
-  // facebookWallet,
-  // githubWallet,
-  // discordWallet,
-  // twitchWallet,
-  // twitterWallet,
-} from '@zerodev/wagmi/rainbowkit'
+import {PrivyProvider} from '@privy-io/react-auth';
+import {ZeroDevPrivyWagmiProvider} from '@zerodev/wagmi/privy';
+import { PRIVY_APP_ID, ZERODEV_PROJECT_IDS } from './constants';
 
-export const projectId = 'f853b01a-e9c0-402b-8af0-aa5f48a2a054'
+const configureChainsConfig = configureChains([polygonMumbai], [infuraProvider({apiKey: 'f36f7f706a58477884ce6fe89165666c'})]);
+const zeroDevOptions = {
+  projectIds: ZERODEV_PROJECT_IDS,
+  projectId: ZERODEV_PROJECT_IDS[0],
+  useSmartWalletForExternalEOA: true,
+}
 
 export const { chains, publicClient, webSocketPublicClient } = configureChains(
   [polygonMumbai],
   [infuraProvider({apiKey: 'f36f7f706a58477884ce6fe89165666c'})]
 )
 
-const connectors = connectorsForWallets([
-  {
-    groupName: 'Social',
-      wallets: [
-        googleWallet({chains, options: { projectId, }}),
-        // facebookWallet({chains, options: { projectId}}),
-        // githubWallet({chains, options: { projectId }}),
-        // discordWallet({chains, options: { projectId }}),
-        // twitchWallet({chains, options: { projectId }}),
-        // twitterWallet({chains, options: { projectId }}),
-    ],
-  },
-]);
-
-const config = createConfig({
-  autoConnect: false,
-  connectors,
-  publicClient,
-  webSocketPublicClient
-})
-
 function ZeroDevWrapper({children}: {children: React.ReactNode}) {
   return (
-    <WagmiConfig config={config}>
-      <RainbowKitProvider theme={darkTheme()} chains={chains} modalSize="compact">
+    <PrivyProvider
+      appId={PRIVY_APP_ID}
+      config={{
+        embeddedWallets: {
+          createOnLogin: 'users-without-wallets',
+          requireUserPasswordOnCreate: false
+        },
+        defaultChain: polygonMumbai,
+        supportedChains: [polygonMumbai]
+      }}
+    >
+      <ZeroDevPrivyWagmiProvider wagmiChainsConfig={configureChainsConfig} options={zeroDevOptions}>
         {children}
-      </RainbowKitProvider>
-    </WagmiConfig>
+      </ZeroDevPrivyWagmiProvider>
+    </PrivyProvider>
   )
 }
 
