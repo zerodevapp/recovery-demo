@@ -11,6 +11,7 @@ const zeroDevOptions = {
   projectIds: ZERODEV_PROJECT_IDS,
   projectId: ZERODEV_PROJECT_IDS[0],
   useSmartWalletForExternalEOA: true,
+  useRecoveredAccount: true,
 }
 
 export const { chains, publicClient, webSocketPublicClient } = configureChains(
