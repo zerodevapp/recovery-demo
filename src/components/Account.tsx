@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useAccount } from "wagmi"
 import { Button } from '@mantine/core';
 import { useKernelAccountRecovery } from "@zerodev/recovery";
@@ -10,7 +11,7 @@ export default function Account() {
   const { address } = useAccount();
   const ecdsaProvider = useEcdsaProvider();
   const {wallets: eoaWallets} = useWallets();
-  const { logout } = usePrivy();
+  const [loading, setLoading] = useState(false);
 
   const { openRecoveryPopup, recoveryEnabled, guardians } = useKernelAccountRecovery({
     address,
@@ -19,8 +20,14 @@ export default function Account() {
         console.log('ecdsaProvider not found');
         return;
       }
-      const { hash } = await ecdsaProvider.sendUserOperation(userOpCallData);
-      await ecdsaProvider.waitForUserOperationTransaction(hash as `0x${string}`);
+      setLoading(true);
+      try {
+        const { hash } = await ecdsaProvider.sendUserOperation(userOpCallData);
+        await ecdsaProvider.waitForUserOperationTransaction(hash as `0x${string}`);
+      } catch (e) {
+        console.log(e);
+      }
+      setLoading(false);
     }
   });
 
@@ -33,7 +40,7 @@ export default function Account() {
 
       <dl className="mt-6 space-y-6 divide-y divide-gray-100 border-t border-gray-200 text-sm leading-6">
         <div className="pt-6 sm:flex">
-          <dt className="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">Kernel SCW Address</dt>
+          <dt className="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">Kernel Account Address</dt>
           <dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
             <div className="text-gray-900">{address}</div>
           </dd>
@@ -51,21 +58,13 @@ export default function Account() {
           </dd>
         </div>
       </dl>
-      <div className="py-8">
+      <div className="pt-8">
         <Button
+            loading={loading}
             size="compact-md"
             onClick={openRecoveryPopup}
         >
             {recoveryEnabled ? "Update Guardian" : "Set Guardian"}
-        </Button>
-      </div>
-      <div className="">
-        <Button
-            size="compact-md"
-            onClick={logout}
-            variant="light"
-        >
-            Disconnect
         </Button>
       </div>
     </div>

@@ -10,13 +10,27 @@ export default function Home() {
     return <Navigate to="/signin" />;
   }
   return (
-    <div className="flex flex-row py-24 px-12">
-      <div className="w-1/2">
-        <NftMint />
+    <div>
+      <div className="flex flex-row py-24 px-12">
+        <div className="w-1/2">
+          <NftMint />
+        </div>
+        <div className="w-1/2">
+          <Account />
+        </div>
       </div>
-      <div className="w-1/2">
-        <Account />
-      </div>
+      <p className="w-full text-center">
+        To execute recovery visit the ZeroDev account portal
+        {" "}
+        <a
+          className="text-blue-500 underline"
+          href="https://kernel-dashboard.onrender.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          here
+        </a>
+      </p>
     </div>
   )
 }
