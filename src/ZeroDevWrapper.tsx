@@ -6,13 +6,10 @@ import { PrivyProvider } from '@privy-io/react-auth';
 import { ZeroDevPrivyWagmiProvider } from '@zerodev/wagmi/privy';
 import { PRIVY_APP_ID, ZERODEV_PROJECT_IDS } from './constants';
 
-// https://arbitrum-sepolia.infura.io/v3/${INFURA_API_KEY}
-// 'https://optimism-sepolia.infura.io/v3/${INFURA_API_KEY}'
-
 console.log({ PRIVY_APP_ID, ZERODEV_PROJECT_IDS })
 const zeroDevOptions = {
-  projectIds: ['2d2d0381-ba44-4a5f-a613-1dfbb5c21fa8'],
-  projectId: '2d2d0381-ba44-4a5f-a613-1dfbb5c21fa8',
+  projectIds: ZERODEV_PROJECT_IDS,
+  projectId: ZERODEV_PROJECT_IDS[0],
   useSmartWalletForExternalEOA: true,
   useRecoveredAccount: true,
 }
@@ -26,7 +23,7 @@ const configureChainsConfig = configureChains([arbitrumSepolia], [jsonRpcProvide
 function ZeroDevWrapper({children}: {children: React.ReactNode}) {
   return (
     <PrivyProvider
-      appId={'clr5fbl4q0207i50fj7tupzdf'}
+      appId={PRIVY_APP_ID}
       config={{
         embeddedWallets: {
           createOnLogin: 'users-without-wallets',
