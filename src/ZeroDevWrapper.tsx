@@ -1,35 +1,39 @@
 import React from "react";
 import { configureChains } from "wagmi";
-import { infuraProvider } from 'wagmi/providers/infura'
-import { polygonMumbai } from 'wagmi/chains'
-import {PrivyProvider} from '@privy-io/react-auth';
-import {ZeroDevPrivyWagmiProvider} from '@zerodev/wagmi/privy';
+import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
+import { arbitrumSepolia } from 'wagmi/chains'
+import { PrivyProvider } from '@privy-io/react-auth';
+import { ZeroDevPrivyWagmiProvider } from '@zerodev/wagmi/privy';
 import { PRIVY_APP_ID, ZERODEV_PROJECT_IDS } from './constants';
 
-const configureChainsConfig = configureChains([polygonMumbai], [infuraProvider({apiKey: 'f36f7f706a58477884ce6fe89165666c'})]);
+// https://arbitrum-sepolia.infura.io/v3/${INFURA_API_KEY}
+// 'https://optimism-sepolia.infura.io/v3/${INFURA_API_KEY}'
+
+console.log({ PRIVY_APP_ID, ZERODEV_PROJECT_IDS })
 const zeroDevOptions = {
-  projectIds: ZERODEV_PROJECT_IDS,
-  projectId: ZERODEV_PROJECT_IDS[0],
+  projectIds: ['2d2d0381-ba44-4a5f-a613-1dfbb5c21fa8'],
+  projectId: '2d2d0381-ba44-4a5f-a613-1dfbb5c21fa8',
   useSmartWalletForExternalEOA: true,
   useRecoveredAccount: true,
 }
 
-export const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [polygonMumbai],
-  [infuraProvider({apiKey: 'f36f7f706a58477884ce6fe89165666c'})]
-)
+const configureChainsConfig = configureChains([arbitrumSepolia], [jsonRpcProvider({
+  rpc: () => ({
+    http: 'https://arbitrum-sepolia.infura.io/v3/f36f7f706a58477884ce6fe89165666c'
+  })
+})]);
 
 function ZeroDevWrapper({children}: {children: React.ReactNode}) {
   return (
     <PrivyProvider
-      appId={PRIVY_APP_ID}
+      appId={'clr5fbl4q0207i50fj7tupzdf'}
       config={{
         embeddedWallets: {
           createOnLogin: 'users-without-wallets',
           requireUserPasswordOnCreate: false
         },
-        defaultChain: polygonMumbai,
-        supportedChains: [polygonMumbai]
+        defaultChain: arbitrumSepolia,
+        supportedChains: [arbitrumSepolia]
       }}
     >
       <ZeroDevPrivyWagmiProvider wagmiChainsConfig={configureChainsConfig} options={zeroDevOptions}>
