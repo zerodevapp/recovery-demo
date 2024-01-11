@@ -4,7 +4,6 @@ import { Button } from '@mantine/core';
 import { useKernelAccountRecovery } from "@zerodev/recovery";
 import { useWallets } from "@privy-io/react-auth";
 import { useEcdsaProvider } from "@zerodev/wagmi";
-// import useKernelAccountRecovery from "../popUp/useKernelAccountRecovery";
 
 export default function Account() {
   const { chain } = useNetwork();
