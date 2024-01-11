@@ -3,6 +3,7 @@ import { z } from "zod";
 export type RecoveryConfig = {
   address?: `0x${string}`;
   onSetupGuardianRequest: (userOpCallData: UserOperationCallData) => Promise<void>;
+  chainId: number;
 }
 
 export type RecoveryPopupMessage = {
@@ -21,7 +22,6 @@ const UserOperationCallDataSchema = z.object({
 
 type UserOperationCallData = z.infer<typeof UserOperationCallDataSchema>;
 
-// Usage example
 export const validateUserOperationCallData = (data: any) => {
   return UserOperationCallDataSchema.safeParse(data);
 };

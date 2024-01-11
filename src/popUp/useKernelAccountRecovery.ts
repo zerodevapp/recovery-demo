@@ -1,19 +1,46 @@
 import { useRef, useEffect, useCallback, useState, useMemo } from "react";
-import { RecoveryConfig, RecoveryPopupMessage, validateUserOperationCallData } from "./helpers/types";
 import useSWR from 'swr';
 
-// @ts-ignore
-const fetcher = (...args) => fetch(...args).then(res => res.json());
+import { RecoveryConfig, RecoveryPopupMessage, validateUserOperationCallData } from "./helpers/types";
 
-const useKernelAccountRecovery = ({ address, onSetupGuardianRequest }: RecoveryConfig) => {
-  // TODO remove dashboard Origin
-  const dashboardOrigin = process.env.REACT_APP_DASHBOARD_URL;
+const KERNEL_API_URL = 'https://kernel-api.zerodev.app'
+const RECOVERY_DASHBOARD_URL = 'http://localhost:3005'
+
+const fetcher = async (url: string) => {
+  const response = await fetch(url);
+  return response.json();
+};
+
+type UseKernelAccountRecoveryResult = {
+  /**
+   * Opens the recovery popup
+   */
+  openRecoveryPopup: () => void;
+
+  /**
+   * Error message
+   */
+  error?: string;
+
+  /**
+   * Whether the account has guardians
+   */
+  recoveryEnabled: boolean;
+
+  /**
+   * List of guardian addresses
+   */
+  guardians: string[];
+};
+
+const useKernelAccountRecovery = ({ address, onSetupGuardianRequest, chainId }: RecoveryConfig): UseKernelAccountRecoveryResult => {
   const childWindowRef = useRef<Window | null>(null);
   const [error, setError] = useState<string | undefined>(undefined);
 
   const { data } = useSWR(
-    () => address ? `https://kernel-api.zerodev.app/accounts/${address}/guardians` : null, 
+    address ? `${KERNEL_API_URL}/accounts/${address}/guardians` : null, 
     fetcher,
+    { refreshInterval: 3000 }
   );
 
   const guardians = useMemo(() => {
@@ -24,24 +51,23 @@ const useKernelAccountRecovery = ({ address, onSetupGuardianRequest }: RecoveryC
     return data.map((guardian: any) => guardian.guardian);
   }, [data]);
 
-
   const openRecoveryPopup = useCallback(() => {
-    if (address === undefined) {
+    if (address === undefined || chainId === undefined) {
       return;
     }
     const parentUrl = encodeURIComponent(window.location.origin);
-    const dashboardUrl = `${dashboardOrigin}/recovery-setup/${address}?parentUrl=${parentUrl}`;
+    const dashboardUrl = `${RECOVERY_DASHBOARD_URL}/recovery-setup/${address}?parentUrl=${parentUrl}&chainId=${chainId}`;
     const windowFeatures = 'width=450,height=650,resizable,scrollbars=yes,status=1';
     childWindowRef.current = window.open(dashboardUrl, '_blank', windowFeatures);
 
     if (childWindowRef.current) {
       childWindowRef.current.focus();
     }
-  }, [address, dashboardOrigin]);
+  }, [address]);
 
   useEffect(() => {
     const handleMessage = async (event: MessageEvent) => {
-      if (event.origin !== dashboardOrigin) {
+      if (event.origin !== RECOVERY_DASHBOARD_URL) {
         // Ignore messages from other origins
         return;
       }
@@ -60,7 +86,7 @@ const useKernelAccountRecovery = ({ address, onSetupGuardianRequest }: RecoveryC
       childWindowRef.current?.postMessage({
         type: 'tx-submitted',
         status: 'processing'
-      } as RecoveryPopupMessage, dashboardOrigin);
+      } as RecoveryPopupMessage, RECOVERY_DASHBOARD_URL);
 
       if (onSetupGuardianRequest) {
         await onSetupGuardianRequest(parseUserOpCallData.data);
@@ -69,7 +95,7 @@ const useKernelAccountRecovery = ({ address, onSetupGuardianRequest }: RecoveryC
       childWindowRef.current?.postMessage({
         type: 'tx-submitted',
         status: 'done'
-      } as RecoveryPopupMessage, dashboardOrigin);
+      } as RecoveryPopupMessage, RECOVERY_DASHBOARD_URL);
     };
 
     window.addEventListener('message', handleMessage);
