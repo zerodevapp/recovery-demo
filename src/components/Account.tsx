@@ -1,19 +1,18 @@
 import { useState } from "react";
 import { useAccount, useNetwork } from "wagmi"
 import { Button } from '@mantine/core';
-import { useKernelAccountRecovery } from "@zerodev/recovery";
+// import { useKernelAccountRecovery } from "@zerodev/recovery";
 import { useWallets } from "@privy-io/react-auth";
 import { useEcdsaProvider } from "@zerodev/wagmi";
-// import useKernelAccountRecovery from "../popUp/useKernelAccountRecovery";
+import useKernelAccountRecovery from "../popUp/useKernelAccountRecovery";
 
 export default function Account() {
   const { chain } = useNetwork();
   const { address } = useAccount();
   const ecdsaProvider = useEcdsaProvider();
   const {wallets: eoaWallets} = useWallets();
-  const [loading, setLoading] = useState(false);
 
-  const { openRecoveryPopup, recoveryEnabled, guardians } = useKernelAccountRecovery({
+  const { openRecoveryPopup, recoveryEnabled, guardians, isPending } = useKernelAccountRecovery({
     chainId: chain?.id ?? 421614,
     address,
     onSetupGuardianRequest: async (userOpCallData) => {
@@ -21,14 +20,12 @@ export default function Account() {
         console.log('ecdsaProvider not found');
         return;
       }
-      setLoading(true);
       try {
         const { hash } = await ecdsaProvider.sendUserOperation(userOpCallData);
         await ecdsaProvider.waitForUserOperationTransaction(hash as `0x${string}`);
       } catch (e) {
         console.log(e);
       }
-      setLoading(false);
     }
   });
 
@@ -61,7 +58,7 @@ export default function Account() {
       </dl>
       <div className="pt-8">
         <Button
-            loading={loading}
+            loading={isPending}
             size="compact-md"
             onClick={openRecoveryPopup}
         >
