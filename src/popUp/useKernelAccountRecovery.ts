@@ -2,6 +2,7 @@ import { useRef, useEffect, useCallback, useState, useMemo } from "react";
 import useSWR from 'swr';
 
 import { RecoveryConfig, RecoveryPopupMessage, validateUserOperationCallData } from "./helpers/types";
+import { isAddress } from "./helpers/isAddress";
 
 const KERNEL_API_URL = 'https://kernel-api.zerodev.app'
 const RECOVERY_DASHBOARD_URL = 'http://localhost:3005'
@@ -38,7 +39,7 @@ type UseKernelAccountRecoveryResult = {
   guardians: string[];
 };
 
-const useKernelAccountRecovery = ({ address, onSetupGuardianRequest, chainId }: RecoveryConfig): UseKernelAccountRecoveryResult => {
+const useKernelAccountRecovery = ({ address, onSetupGuardianRequest, chainId, suggestedGuardianAddress }: RecoveryConfig): UseKernelAccountRecoveryResult => {
   const childWindowRef = useRef<Window | null>(null);
   const [error, setError] = useState<string | undefined>(undefined);
   const [isPending, setIsPending] = useState<boolean>(false);
@@ -78,7 +79,10 @@ const useKernelAccountRecovery = ({ address, onSetupGuardianRequest, chainId }: 
     }
     setIsPending(true);
     const parentUrl = encodeURIComponent(window.location.origin);
-    const dashboardUrl = `${RECOVERY_DASHBOARD_URL}/recovery-setup/${address}?parentUrl=${parentUrl}&chainId=${chainId}`;
+    let dashboardUrl = `${RECOVERY_DASHBOARD_URL}/recovery-setup/${address}?parentUrl=${parentUrl}&chainId=${chainId}`;
+    if (suggestedGuardianAddress && isAddress(suggestedGuardianAddress)) {
+      dashboardUrl = dashboardUrl.concat(`&suggestedGuardianAddress=${suggestedGuardianAddress}`);
+    }
     const windowFeatures = 'width=450,height=650,resizable,scrollbars=yes,status=1';
     childWindowRef.current = window.open(dashboardUrl, '_blank', windowFeatures);
 
