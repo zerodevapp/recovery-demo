@@ -83,7 +83,7 @@ const useKernelAccountRecovery = ({ address, onSetupGuardianRequest, chainId, su
     if (suggestedGuardianAddress && isAddress(suggestedGuardianAddress)) {
       dashboardUrl = dashboardUrl.concat(`&suggestedGuardianAddress=${suggestedGuardianAddress}`);
     }
-    const windowFeatures = 'width=450,height=650,resizable,scrollbars=yes,status=1';
+    const windowFeatures = 'width=400,height=560,resizable,scrollbars=yes,status=1';
     childWindowRef.current = window.open(dashboardUrl, '_blank', windowFeatures);
 
     if (childWindowRef.current) {
