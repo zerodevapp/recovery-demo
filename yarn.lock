@@ -4727,10 +4727,10 @@
   resolved "https://registry.yarnpkg.com/@xtuc/long/-/long-4.2.2.tgz#d291c6a4e97989b5c61d9acf396ae4fe133a718d"
   integrity sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==
 
-"@zerodev/recovery@^0.0.4":
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/@zerodev/recovery/-/recovery-0.0.4.tgz#27db80cf490dcb11f8a9e85ed28be612aa3d8136"
-  integrity sha512-UX934cK2Gde9vw5QsG7OwsqrmLyftYoHI1aTtACLwgn+eVORWDu4JkH/S5gF7zIC3ybS23Bv6MCUTg5N7NL5Bg==
+"@zerodev/recovery@^0.0.5":
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/@zerodev/recovery/-/recovery-0.0.5.tgz#5f1f9f23cc381977796353c1c415d312f1039b42"
+  integrity sha512-WOo4NKf05GtFd8wdJTpv9LDbzp9ml8Hj9Q3DHMhTNNmWAOuUelmyTEdwHQCpryCmDzpwj3eFKKsHeS2sDxU15g==
   dependencies:
     swr "^2.2.4"
     zod "^3.22.4"
