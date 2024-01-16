@@ -13,7 +13,6 @@ export default function Account() {
   const { openRecoveryPopup, recoveryEnabled, guardians, isPending } = useKernelAccountRecovery({
     chainId: chain?.id ?? 421614,
     address,
-    suggestedGuardianAddress: "0x517CF7C9606B30a1b4723f2E40780033dBDD36e5",
     onSetupGuardianRequest: async (userOpCallData) => {
       if (!ecdsaProvider) {
         console.log('ecdsaProvider not found');
