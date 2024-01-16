@@ -24,7 +24,7 @@ export default function Home() {
         {" "}
         <a
           className="text-blue-500 underline"
-          href="https://kernel-dashboard.onrender.com/"
+          href="https://recovery.zerodev.app/"
           target="_blank"
           rel="noopener noreferrer"
         >
