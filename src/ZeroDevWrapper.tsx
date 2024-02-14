@@ -1,7 +1,7 @@
 import React from "react";
 import { configureChains } from "wagmi";
-import { infuraProvider } from 'wagmi/providers/infura'
-import { polygonMumbai } from 'wagmi/chains'
+import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
+import { baseSepolia } from 'wagmi/chains'
 import { PrivyProvider } from '@privy-io/react-auth';
 import { ZeroDevPrivyWagmiProvider } from '@zerodev/wagmi/privy';
 import { PRIVY_APP_ID, ZERODEV_PROJECT_IDS } from './constants';
@@ -13,7 +13,18 @@ const zeroDevOptions = {
   useRecoveredAccount: true,
 }
 
-const configureChainsConfig = configureChains([polygonMumbai], [infuraProvider({apiKey: 'f36f7f706a58477884ce6fe89165666c'})]);
+const configureChainsConfig = configureChains([baseSepolia], [
+  jsonRpcProvider({ rpc: (chain) => {
+    switch (chain) {
+      case baseSepolia:
+        return {
+          http: 'https://base-sepolia.g.alchemy.com/v2/qIpvyzx2jKfsikOHi4lvqA5G4p3RBjix',
+        }
+      default:
+        return null
+    }
+  }}),
+]);
 
 function ZeroDevWrapper({children}: {children: React.ReactNode}) {
   return (
@@ -24,8 +35,8 @@ function ZeroDevWrapper({children}: {children: React.ReactNode}) {
           createOnLogin: 'users-without-wallets',
           requireUserPasswordOnCreate: false
         },
-        defaultChain: polygonMumbai,
-        supportedChains: [polygonMumbai]
+        defaultChain: baseSepolia,
+        supportedChains: [baseSepolia]
       }}
     >
       <ZeroDevPrivyWagmiProvider wagmiChainsConfig={configureChainsConfig} options={zeroDevOptions}>
